@@ -3,11 +3,18 @@ import Todo from './Todo';
 import './App.css';
 
 class App extends React.Component {
+
+  items = [
+    {brief: "Find the bug with oly being able to add one"},
+    {brief: "Add delete functionality"},
+    {brief: "Make the arrows work"},
+    {brief: "Create a local storage"}
+  ];
+
   render() {
     return (
       <div className="main container">
-        <h1 className="title"><i className="far fa-check-square"></i> Todo List</h1>
-        <Todo />
+        <Todo items={this.items} />
       </div>
     );
   }

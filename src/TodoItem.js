@@ -3,18 +3,14 @@ import React from 'react';
 class TodoItem extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { brief: props.brief, date: props.date, done: props.done }
-        this.toggle = this.toggle.bind(this);
+        this.state = { brief: props.brief, date: props.date, done: props.done ? true : false }
     }
-    toggle(event) {
-        console.log(event.target.checked);
-        this.setState({ done: event.target.checked }, () =>
-            console.log(this.props.done)
-        );
-    }
+
+    toggle = (event) => this.setState({ done: event.target.checked });
+
     render() {
         return (
-            <div className="notification is-info">
+            <div className="task-item notification is-info">
                 <label className="checkbox is-inline">
                     <input className="is-medium" type="checkbox" 
                         checked={this.state.done}
