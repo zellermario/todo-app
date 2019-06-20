@@ -3,9 +3,16 @@ import React from 'react';
 class TodoItem extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { brief: props.brief, date: props.date, done: props.done ? true : false }
+        this.state = {  
+            id: props.id,
+            brief: props.brief, 
+            date: props.date, 
+            done: props.done ? true : false,
+            deletefn: props.deletefn
+        }
     }
 
+    // Updates the 'done' property when the checkbox is clicked
     toggle = (event) => this.setState({ done: event.target.checked });
 
     render() {
@@ -24,7 +31,7 @@ class TodoItem extends React.Component {
                     <span className="icon"><i className="fas fa-chevron-up"></i></span>
                     <span className="icon"><i className="fas fa-chevron-down"></i></span>
                 </div>
-                <button className="delete is-medium"></button>
+                <button id={this.state.id} className="delete is-medium" onClick={this.state.deletefn}></button>
             </div>
         );
     }
