@@ -9,5 +9,4 @@ The app uses Bulma and FontAwesome to render the UI. To avoid complications, for
 `git clone https://github.com/zellermario/todo-app`<br />
 `cd todo-app`<br /><br />
 2. Install dependencies with `npm install`.<br /><br />
-3. To enter live development mode, run `npm start`.<br />
-To build the app for use, run `npm run build`. The built app then will be output to `./build`.
+3. To serve the application, run `npm start`.<br />
