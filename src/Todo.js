@@ -26,31 +26,51 @@ class Todo extends React.Component {
     }
 
     // Adds the item to 'items' array when the form is submitted
-    addItem = (event) => { 
-        event.preventDefault(); 
+    addItem = (newItem) => { 
         let items = [...this.state.items];
-        let newItem = {
-            id: this.state.nextID,
-            brief: this.state.brief,
-            date: this.state.date,
-            done: false
+        let nextID = this.state.nextID;
+        if (newItem.id === undefined) {
+            newItem.id = nextID;
+            nextID += 1;
         }
         items.push(newItem);
-        let incremented = this.state.nextID + 1;
-        this.setState({ items, brief: '',  nextID: incremented });
+        this.setState({ items, nextID, brief: '' }, () => {
+            localStorage.setItem('todoItems', JSON.stringify(items))
+            localStorage.setItem('todoNextID', JSON.stringify(nextID))
+        });
     }
 
     // Deletes the item with the id = (event.target.id)
-    deleteItem = (event) => {
+    deleteItem = (idToDelete) => {
         let items = [...this.state.items];
-        let idToDelete = Number(event.target.id);
         const updated = items.filter((item) => item.id !== idToDelete);
         const deleted = items.filter((item) => item.id === idToDelete)[0];
-        this.setState({ items : updated, lastDeleted: deleted});
+        this.setState({ items : updated, lastDeleted: deleted, showUndo: true}, () =>
+            localStorage.setItem('todoItems', JSON.stringify(updated))
+        );
+        setTimeout(() => {
+            this.setState({showUndo: false, lastDeleted: {}});
+        }, 5000);
     }
 
-    undoDelete = (event) => {
-        this.addItem()
+    // Puts the last deleted item back to the items array
+    undoDelete = () => {
+        this.addItem(this.state.lastDeleted);
+        this.setState({showUndo : false});
+    }
+
+    moveItem = (direction, id) => {
+        let items = [...this.state.items];
+        let affectedIndex = 0;
+        items.forEach((val, i) => {
+            if (val.id === id)
+                affectedIndex = i;
+        });
+        if (direction === 'up' && affectedIndex !== 0)
+            [items[affectedIndex - 1], items[affectedIndex]] = [items[affectedIndex], items[affectedIndex - 1]];
+        else if (direction === 'down' && affectedIndex !== items.length - 1)
+            [items[affectedIndex], items[affectedIndex + 1]] = [items[affectedIndex + 1], items[affectedIndex]];
+        this.setState({items});
     }
 
     render() {
@@ -59,7 +79,14 @@ class Todo extends React.Component {
                 <h1 className="title"><i className="far fa-check-square"></i> Todo List</h1>
                 <div className="section has-background-white-ter">
                     <h2 className="subtitle">Add new task</h2>
-                    <form onSubmit={this.addItem}>
+                    <form onSubmit={(event) => {
+                        event.preventDefault();
+                        this.addItem({
+                            brief: this.state.brief,
+                            date: this.state.date,
+                            done: false
+                        });
+                    }}>
                         <input type="text" name="brief" onChange={this.formChanged} value={this.state.brief} 
                             className="name input" placeholder="Task brief" required />
                         <input type="date" name="date" onChange={this.formChanged} value={this.state.date} 
@@ -72,7 +99,7 @@ class Todo extends React.Component {
                     <article className={this.state.showUndo ? "message is-warning" : "message is-warning is-hidden"}>
                         <div className="message-header">
                             <p>
-                                <span className="trash icon"><i className="far fa-trash-alt"></i></span>
+                                <span className="trash icon"><i className="fas fa-info"></i></span>
                                 <span className="description">Item deleted</span>
                                 <span className="undo" onClick={this.undoDelete}>Undo</span>
                             </p>
@@ -87,7 +114,8 @@ class Todo extends React.Component {
                             brief={item.brief}
                             date={item.date}
                             done={item.done} 
-                            deletefn={this.deleteItem} />
+                            deletefn={this.deleteItem}
+                            movefn={this.moveItem} />
                         )
                     })}
                 </div>

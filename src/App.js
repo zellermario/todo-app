@@ -3,19 +3,21 @@ import Todo from './Todo';
 import './App.css';
 
 class App extends React.Component {
-
-  items = [
-    { id: 1, brief: "Find the bug with oly being able to add one", done: true },
-    { id: 2, brief: "Add delete functionality", done: true },
-    { id: 3, brief: "Make the arrows work"},
-    { id: 4, brief: "Create a local storage"}
-  ];
-  nextID = 5;
-
+  constructor(props) {
+    super(props);
+    if (localStorage.getItem('todoItems') === null)
+      localStorage.setItem('todoItems', JSON.stringify([]));
+    if (localStorage.getItem('todoNextID') === null)
+      localStorage.setItem('todoNextID', JSON.stringify(1));
+    this.items = JSON.parse(localStorage.getItem('todoItems'));
+    this.nextID = JSON.parse(localStorage.getItem('todoNextID'));
+  }
   render() {
     return (
       <div className="main container">
-        <Todo items={this.items} nextID={this.nextID} />
+        <Todo 
+          items={this.items} 
+          nextID={this.nextID} />
       </div>
     );
   }

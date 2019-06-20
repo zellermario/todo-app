@@ -8,7 +8,8 @@ class TodoItem extends React.Component {
             brief: props.brief, 
             date: props.date, 
             done: props.done ? true : false,
-            deletefn: props.deletefn
+            deletefn: props.deletefn,
+            movefn: props.movefn
         }
     }
 
@@ -28,10 +29,14 @@ class TodoItem extends React.Component {
                     <span><em className="item-date">{this.state.date}</em></span>
                 </label>
                 <div className="arrows">
-                    <span className="icon"><i className="fas fa-chevron-up"></i></span>
-                    <span className="icon"><i className="fas fa-chevron-down"></i></span>
+                    <span className="icon" 
+                        onClick={() => this.state.movefn('up', this.state.id)}><i className="fas fa-chevron-up"></i>
+                    </span>
+                    <span className="icon" 
+                        onClick={() => this.state.movefn('down', this.state.id)}><i className="fas fa-chevron-down"></i>
+                    </span>
                 </div>
-                <button id={this.state.id} className="delete is-medium" onClick={this.state.deletefn}></button>
+                <button className="delete is-medium" onClick={() => this.state.deletefn(this.state.id)}></button>
             </div>
         );
     }
