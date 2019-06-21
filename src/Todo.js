@@ -103,7 +103,6 @@ class Todo extends React.Component {
                                 <span className="description">Item deleted</span>
                                 <span className="undo" onClick={this.undoDelete}>Undo</span>
                             </p>
-                            <button className="delete" aria-label="delete"></button>
                         </div>
                     </article>
                     {this.state.items.map((item) => {
